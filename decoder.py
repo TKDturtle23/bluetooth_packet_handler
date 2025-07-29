@@ -12,11 +12,14 @@ def decode_data(packets: list[bytearray], max_packet_size: int):
     compression_level = packets[0][0]
     packet_count = packets[0][1]
 
+    # Remove the end marker if present
+    if packets[-1] == bytearray("__END__".encode('utf-8')):
+        packets = packets[:-1]
+
     if packet_count != len(packets) - 1:
         raise ValueError("Packet count mismatch")
 
     # Calculate how many bytes are needed to represent the packet index
-    # Use the first packet to estimate index_bytes
     first_packet = packets[1]
     index_bytes = 1
     payload_size = max_packet_size - index_bytes
@@ -28,7 +31,7 @@ def decode_data(packets: list[bytearray], max_packet_size: int):
     for packet in packets[1:]:
         payload = packet[:-index_bytes]
         data.extend(payload)
-
+    
     # Decompress based on compression_level
     if compression_level > 0:
         data = decompress_data(data)
