@@ -42,7 +42,7 @@ def encode_data(data: bytearray, max_packet_size: int, compression_level=0):
             packet.append((index >> (8 * b)) & 0xFF)
         index += 1
         packets.append(packet)
-    packets.append(bytearray("__END__".encode('utf-8')))
+    
     # Prepend the amount of packets to the start of packets
     packet_count = len(packets)
     packets.insert(0, bytearray([compression_level & 0xFF, packet_count & 0xFF]))

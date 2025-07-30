@@ -12,12 +12,9 @@ def decode_data(packets: list[bytearray], max_packet_size: int):
     compression_level = packets[0][0]
     packet_count = packets[0][1]
 
-    # Remove the end marker if present
-    if packets[-1] == bytearray("__END__".encode('utf-8')):
-        packets = packets[:-1]
 
     if packet_count != len(packets) - 1:
-        raise ValueError("Packet count mismatch")
+        raise ValueError(f"Packet count mismatch, expected {packet_count}, received {len(packets)}")
 
     # Calculate how many bytes are needed to represent the packet index
     first_packet = packets[1]
@@ -38,7 +35,7 @@ def decode_data(packets: list[bytearray], max_packet_size: int):
 
     return data
 def main():
-    data = decode_data([bytearray(b'\x01\x03'), bytearray(b'x\x01\x15\xc8\xb1\r\x800\x10\x03\xc0\xc1\x98&\xc8X\xca\xdb!\x00'), bytearray(b'\x85\x15!\xb6\x874W\\\x0b\x0eS\xd5b\x81\xe5\x08\xc5\xd9\x9f\x01'), bytearray(b'uQ\xf7\x08\xcc3su\xbc\x7f\xa6@k\xfb\x01`\xb8\x16X\x02')], 20)
+    data = decode_data([bytearray(b'\x03\x08'), bytearray(b'x\xda\x1d\xcd1\x0e\xc3 \x0c\x85\xe1\xabD\xcc=A\xd7\x1e\xa3\x00'), bytearray(b'Cd\x82IPL\x8c\x0c\x0cm\xd5\xbb\xb7\xcf\x9b\xbf_6|\x01'), bytearray(b'\xc2\x15\xeeKH\x9ci\xca\x08\xb7%T\xd8\xcav\x9a\x8a t\x02'), bytearray(b'\x84N\ts\xc4\x1ce\xf6\x03b\x97j[\x87\xae\xc6}\x90\xf9\x03'), bytearray(b'\x13\x19=\xcf\xedd35\x94\xe4\x9b\x94\xa85a\x84\x86\xd0\xf4\x04'), bytearray(b'\xda\x81\xb7\xffpX\xa9\r|\x82\x8f\xd9\x87Vp\x07wc_\x05'), bytearray(b'}9\xa8F)\xff\xdb\xef\x0fw\x056\x80\x06'), bytearray(b'__END__')], 20)
     print (data)
 if __name__ == "__main__":
     main()
